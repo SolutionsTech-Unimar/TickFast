@@ -1,0 +1,207 @@
+body {
+    background: linear-gradient(45deg, #f5d2ea, #f5ebd9); 
+}
+
+.inicio {
+    font-family: Arial, sans-serif, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(45deg, #f9f7f1, #f5ebd9); 
+    background-size: 300% 300%;
+    animation: gradientAnimation 6s ease infinite, backgroundMovement 30s linear infinite;
+    padding: 20px; 
+}
+
+.header {
+    background: linear-gradient(45deg, #f9f7f1, #f5ebd9); 
+}
+
+.header:hover {
+    box-shadow: 0 2px 2px rgba(85, 35, 1, 0.388);
+}
+
+h1 {
+    color: #f5a3c7;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    animation: slideInFromTop 1s ease-out, pulse 2s infinite;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px; 
+    text-align: center;
+    border: 2px solid #f5a3c7; 
+    animation: fadeIn 1s ease-in-out, borderAnimation 2s infinite alternate;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.input-text {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #f5a3c7; 
+    margin-bottom: 5px;
+}
+
+.input-group input, .input-group textarea {
+    width: 100%;  
+    padding: 12px;
+    border: 1px solid #f5a3c7; 
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    animation: slideInFromLeft 0.5s ease-out;
+    box-sizing: border-box;
+}
+
+.input-group input:focus, .input-group textarea:focus {
+    border-color: #d26c9d; 
+    outline: none;
+    transform: translateX(5px); 
+}
+
+select {
+    width: 50%;           
+    padding: 9px;         
+    font-size: 14px;        
+    border: 2px solid #ccc; 
+    border-radius: 5px;     
+    background-color: #f9f9f9; 
+    color: #333;        
+    font-family: 'Courier New', Courier, monospace;   
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #f5a3c7; 
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    animation: pulseButton 2s infinite;
+}
+
+button:hover {
+    background-color: #d26c9d; 
+    transform: scale(1.05); 
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromTop {
+    0% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes borderAnimation {
+    0% {
+        border-color: #f5a3c7;
+    }
+    100% {
+        border-color: #d26c9d;
+    }
+}
+
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulseButton {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes backgroundMovement {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .input-group input, .input-group textarea {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 18px;
+    }
+}

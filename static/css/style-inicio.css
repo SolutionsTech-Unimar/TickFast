@@ -1,0 +1,213 @@
+.container-fundo {
+  height: 100vh;
+  position: relative;
+  background-image: url('../images/fundo.jpeg'); 
+  background-size: cover; 
+  background-position: center center; 
+  background-repeat: no-repeat;
+  z-index: 1; 
+  background-attachment: fixed;
+}
+
+.header:hover {
+  box-shadow: 0 2px 2px rgba(251, 251, 251, 0.388);
+}
+
+.fade-in-inicial {
+  opacity: 0; 
+  transform: translateX(-100%); 
+  transition: all 1s ease-out
+}
+
+.fade-in-inicial.visible {
+  opacity: 1; 
+  transform: translateX(0); 
+}
+
+.div-inicial {
+  display: flex;
+  justify-content: space-between;
+}
+
+.freezer {
+  width: 20vw;
+  height: 20vw;
+  border: 3px solid rgb(160, 80, 132);
+  border-radius: 18%;
+  box-shadow: 4px 8px #30303082;
+}
+
+.container-freezer {
+  display: flex;
+  flex-direction: column;
+  margin-right: 8%;
+  margin-top: 3%;
+  align-items: center;
+}
+
+.container-inicial {
+  text-align: center; 
+  display: flex;
+  flex-direction: column;
+}
+
+.texto {
+  font-size: 40px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(83, 46, 0);
+  padding-top: 6%;
+  margin-left: 8%;
+  animation: slideInFromTop 1s ease-out
+}
+
+.texto-button {
+  font-size: 40px; 
+  margin-bottom: 0px; 
+  margin-top: 15x;
+}
+
+.button-shop {
+  padding: 15px 40px;               
+  font-size: 24px;                  
+  background-color: rgba(123, 71, 16, 0.726); 
+  color: #fff;                      
+  border: none;                     
+  border-radius: 15px;             
+  cursor: pointer;                  
+  transition: all 0.3s ease;         
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  text-transform: uppercase;        
+  font-weight: bold;                
+}
+
+.button-shop:hover {
+  background-color: rgba(123, 71, 16, 0.9); 
+  transform: translateY(-4px); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+}
+
+.button-shop:active {
+  transform: translateY(2px); 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+}
+
+.container-button {
+  margin-top: 30px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.2s ease-in-out, transform 1.5s ease-in-out; 
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.div-2 {
+  height: 100vh;
+  background: 
+  linear-gradient(to left, rgba(192, 199, 143, 0.288), rgba(197, 202, 163, 0.288) 50%), 
+  linear-gradient(to right, rgba(192, 199, 143, 0.288), rgba(197, 202, 163, 0.288) 50%),
+  url('../images/beige-abstract-wallpaper-background-image.jpg');
+  background-size: cover; 
+  background-position: center center; 
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: translateY(50px); 
+  transition: opacity 1s ease, transform 0.1s ease; 
+}
+
+.div-2.visible {
+  opacity: 1; 
+  transform: translateY(0); 
+}
+
+#avaliacoes {
+  font-size: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  font-size: 50px;
+  font-family: Copperplate, "Copperplate Gothic Light", fantasy;
+  color: rgb(83, 46, 0);
+}
+
+@media (max-width: 768px) {
+  #avaliacoes {
+    padding-top: 20px; 
+  }
+}
+
+.container-avaliacoes {
+  display: flex; 
+  margin-top: 20px; 
+  align-items: flex-start;
+  gap: 200px;
+  padding-top: 100px; 
+}
+
+#gato-avaliacoes {
+  width: 250px;
+  margin-left: 50px;
+}
+
+.caixa {
+  padding: 40px;           
+  background-color: rgba(255, 255, 255, 0.363); 
+  border: 2px; 
+  border-radius: 10px;    
+  font-size: 18px;      
+  color: #333;        
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.195); 
+  width: 45vw;
+  margin-top: -60px;
+}
+
+.container-caixas {
+  display: flex;
+  flex-direction: column;
+  gap: 6vw;
+}
+
+.container-button2 {
+  width: 20vw;
+  margin-top: -60px;
+}
+
+.button2 {
+  padding: 5px 20px;               
+  font-size: 18px;                  
+  background-color: rgb(83, 46, 0);  
+  color: beige;                  
+  border: none;                     
+  border-radius: 10px;             
+  cursor: pointer;                  
+  transition: all 0.3s ease;         
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button2:hover {
+  background-color: rgba(123, 71, 16, 0.9); 
+  transform: translateY(-4px); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+}
+
+.button2:active {
+  transform: translateY(2px); 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+}
+
+@keyframes slideInFromTop {
+  0% {
+      transform: translateY(-50px);
+      opacity: 0;
+  }
+  100% {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}

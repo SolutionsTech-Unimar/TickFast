@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style-tickfast.css') }}"> <!-- Trocar aqui pela referência do style-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='fonts/CreatoDisplay-Bold.otf') }}"> <!-- Trocar aqui pela referência da pasta da fonte-->
+  <title>TickFast</title>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-left">
+      <h1>TickFast</h1>
+    </div>
+    <div class="nav-right">
+      <div class="conteiner">
+        <div class="nav-box">
+          <a href="#">Calendário</a>
+        </div>
+        <div class="nav-box"><a href="#">Mapa</a>
+        </div>
+        <div class="nav-box">
+          <a href="#">🔔</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="mini-bar" class="mini-bar">
+    <button id="btnPessoa" class="icon-button">👤</button>
+    <button id="btnCarta" class="icon-button">📩</button>
+  </div>
+  <div id="sidebarPessoa" class="sidebar">
+    <button class="close-btn" onclick="closeSidebar('sidebarPessoa')">✖</button>
+    <h2>Tecnicos</h2>
+    <div class="ticket-box">
+      <h3></h3>
+      <p></p>
+      <p></p>
+      <p></p>
+    </div>
+    <div class="ticket-box">
+      <h3></h3>
+      <p></p>
+      <p></p>
+      <p></p>
+    </div>
+  </div>
+
+  <div id="sidebarCarta" class="sidebar">
+    <button class="close-btn" onclick="closeSidebar('sidebarCarta')">✖</button>
+    <h2>Tickets</h2>
+  </div>
+
+
+  <div class="conteiner">
+    <div class="boxData">
+      <h1>
+        <span class="highlight">Sexta-feira 21, </span><span class="highlight2"> Março 2025</span>
+      </h1>
+    </div>
+  </div>
+
+  <div id="map"></div>
+</body>
+
+</html>
+<script src="{{ url_for('static', filename='js/javinha.js') }}" defer></script>  <!-- Trocar aqui pela referência do javinha.js-->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
+  </script>

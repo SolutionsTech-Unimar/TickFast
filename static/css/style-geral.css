@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    font: 25px Arial;
+    cursor: pointer;
+    align-items: center;
+    height: 70px;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    padding: 15px;
+    padding-top: 3%;
+}
+
+.header-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.header-link:hover {
+    text-decoration: underline;
+}
+
+#logo {
+    width: 15vw;
+    margin-left: 50px;
+}
+
+.items-container {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: rgb(65, 64, 64);
+}
+
+.icones {
+    display: flex;
+    gap: 50px;
+    margin-right: 50px;
+    align-items: center;
+}
+
+#index:hover {
+    color: rgba(78, 77, 77, 0.633);
+}
+
+#contato:hover {
+    color: rgba(78, 77, 77, 0.633);
+}
+
+#sobre:hover {
+    color: rgba(78, 77, 77, 0.633);
+}
+
+#produtos:hover {
+    color: rgba(78, 77, 77, 0.633);
+}
+
+.whatsapp-icon {
+    cursor: pointer;           
+    display: inline-block;                
+    color: #000000;            
+}
+
+.footer {
+    background-color: rgba(0, 0, 0, 0.852);
+    color: white;
+    height: 50vh;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-family: sans-serif;
+}
+
+.footer1 {
+    margin-left: 15vw;
+    margin-top: 5vw;
+}
+
+.footer1-elementos {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    margin-top: 2vw;
+    font: 20px Arial, sans-serif;
+}
+
+.footer-meio {
+    margin-top: 5vw;
+}
+
+.footer-meio-elementos {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    margin-top: 2vw;
+    font: 20px Arial, sans-serif;
+}
+
+.footer2 {
+    margin-right: 15vw;
+    margin-top: 5vw;
+}
+
+.sublinhado{
+    background-image: linear-gradient(90deg, rgb(230, 254, 95),rgb(255, 0, 174));
+    background-repeat: no-repeat;
+    background-size: 0% 3px;
+    background-position: left bottom;
+    transition: background-size 500ms ease;
+    cursor:pointer;
+    text-decoration:none;
+    display: flex;
+    flex-direction: column;
+}
+
+.sublinhado:hover{
+    background-size: 100% 3px;
+}
+
+.container-sociais {
+    display: flex;
+    margin-top: 2vw;
+    justify-content: space-between;
+}
+
+

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-geral.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-contato.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Kit Cones</title>
+</head>
+<body>
+    <div class="header">
+        <div> 
+            <img id="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+        </div>  
+        <div class="items-container">
+            <div id="index"> 
+                <a class="header-link" href="{{ url_for('home') }}">Início</a> 
+            </div>
+            <div id="contato"> 
+                <a class="header-link" href="{{ url_for('contato') }}">Contato</a>
+            </div>
+            <div id="produtos"> Produtos </div>
+            <div id="sobre"> Sobre a Kitcones </div>
+        </div>
+        <div class="icones">
+            <div id="whatsapp-icon" class="whatsapp-icon">
+                <i class="fa-brands fa-whatsapp logo-whats"></i>
+            </div>
+            <i class="fa-solid fa-user user"></i>
+        </div>
+    </div>
+
+    <div class="inicio">
+        <div class="container">
+            <h1>Formulário de Contato</h1>
+            <form id="contatoForm" onsubmit="return validarFormulario(event)">
+                <div class="input-group">
+                    <label for="nome">Nome Completo:</label>
+                    <input type="text" id="nome" class="input-text confetti" name="nome" placeholder="Seu nome completo" required>
+                </div>
+                <div class="input-group">
+                    <label for="cep">CEP:</label>
+                    <input type="text" id="cep" class="input-text confetti" name="cep" placeholder="XXXXX-XXX" required>
+                </div>
+                <div class="input-group">
+                    <label for="telefone">Telefone:</label>
+                    <input type="text" id="telefone" class="input-text confetti" name="telefone" placeholder="(XX) XXXXX-XXXX" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" class="input-text confetti" name="email" placeholder="Seu email" required>
+                </div>
+                <div class="input-group">
+                    <label>Selecione o produto:</label>
+                    <select id="produto" name="produto">
+                        <option value="" selected disabled>Escolha uma opção</option>
+                        <option value="cancelamento">Cancelamento</option>
+                        <option value="freezer">Freezer</option>
+                        <option value="maquina de sorvete">Máquina de sorvete</option>
+                        <option value="geladeira">Geladeira</option>
+                        <option value="maquinademilkshake">Máquina de Milkshake</option>
+                        <option value="maquinadechantilly">Máquina de Chantilly</option>
+                      </select> 
+                </div>
+                <div class="input-group">
+                    <label for="descricao">Descrição:</label>
+                    <textarea id="descricao" class="input-text" name="descricao" rows="5" placeholder="Descrição" required></textarea>
+                </div>
+                <div id="errorMessages" style="color: rgb(110, 2, 2); display: none; margin-bottom: 10px;">
+                </div>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <h1 class="footer1">
+            <span class="sublinhado">Empresa</span>
+            <div class="footer1-elementos">
+                <div>- Sobre</div>
+                <div>- Ajuda/FAQ</div>
+                <div>- Copyright</div>
+                <div>- Fundadores</div>
+            </div>
+        </h1>
+        <h1 class="footer-meio">
+            <span class="sublinhado">Recursos</span>
+            <div class="footer-meio-elementos">
+                <div>- Suporte direto da Kitcones</div>
+                <div>- Carreiras</div>
+                <div>- EULA da loja</div>
+            </div>
+        </h1>
+        <h1 class="footer-meio">
+            <span class="sublinhado">Nossos Produtos</span>
+            <div class="footer-meio-elementos">
+                <div>- Freezer</div>
+                <div>- Geladeira</div>
+                <div>- Máquina de sorvete</div>
+                <div>- Máquina de milkshake</div>
+                <div>- Máquina de chantilly</div>
+            </div>
+        </h1>
+        <h1 class="footer2">
+            <span class="sublinhado">Redes Sociais</span>
+            <div class="container-sociais">
+                <i class="fa-brands fa-facebook-f"></i>
+                <i class="fa-brands fa-twitter"></i>
+                <i class="fa-brands fa-instagram"></i>
+                <i class="fa-brands fa-tiktok"></i>
+            </div>
+        </h1>
+    </div>
+
+    <script>
+        const whatsappIcon = document.getElementById('whatsapp-icon');
+
+        whatsappIcon.addEventListener('click', function() {
+          window.location.href = 'https://wa.me/5514991148278';
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mojs/core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/confetti.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/contato.js') }}" defer></script>
+
+</body>
+</html>
