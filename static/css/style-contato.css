@@ -1,25 +1,21 @@
-body {
-    background: linear-gradient(45deg, #f5d2ea, #f5ebd9); 
-}
-
 .inicio {
     font-family: Arial, sans-serif, monospace;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(45deg, #f9f7f1, #f5ebd9); 
+    background-image: linear-gradient(to right, rgba(140, 88, 120, 0.448),rgba(221, 145, 185, 0.76),rgba(210, 183, 216, 0.777),rgba(190, 229, 246, 0.777),rgba(212, 168, 201, 0.711),rgba(228, 198, 250, 0.793),rgba(209, 167, 209, 0.727)); 
     background-size: 300% 300%;
     animation: gradientAnimation 6s ease infinite, backgroundMovement 30s linear infinite;
     padding: 20px; 
 }
 
 .header {
-    background: linear-gradient(45deg, #f9f7f1, #f5ebd9); 
+    background: linear-gradient(45deg, #def0f7be, #cd9fcfc4); 
 }
 
 .header:hover {
-    box-shadow: 0 2px 2px rgba(85, 35, 1, 0.388);
+    box-shadow: 0 2px 20px rgba(85, 35, 1, 0.388);
 }
 
 h1 {
@@ -42,6 +38,8 @@ h1 {
     text-align: center;
     border: 2px solid #f5a3c7; 
     animation: fadeIn 1s ease-in-out, borderAnimation 2s infinite alternate;
+    margin-bottom: 20vh;
+    margin-top: 20vh;
 }
 
 .input-group {
