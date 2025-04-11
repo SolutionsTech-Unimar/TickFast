@@ -22,9 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleSidebar(sidebarCarta);
     });
 
-    function closeSidebar(id) {
-        document.getElementById(id).classList.remove("active");
-    }
 
     document.querySelectorAll(".close-btn").forEach(button => {
         button.addEventListener("click", function () {
@@ -87,6 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    let marcadoresPorCep = {};
+
     async function plotarCepNoMapa() {
         for (const cep of ceps) {
           const viaCepResponse = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
@@ -98,11 +97,15 @@ document.addEventListener("DOMContentLoaded", function () {
           const nominatimResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`);
           const nominatimData = await nominatimResponse.json();
     
+          if (marcadoresPorCep[cep]) return;
+
           if (nominatimData.length > 0) {
             const { lat, lon } = nominatimData[0];
     
             // Debug para ver as coordenadas no console
-            L.marker([lat, lon]).addTo(map);
+            
+            const marcador = L.marker([lat, lon]).addTo(map);
+            marcadoresPorCep[cep] = marcador;
             console.log(`CEP: ${cep} -> Latitude: ${lat}, Longitude: ${lon}`);
             
           } else {
@@ -113,8 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    setInterval(() => listTickets('sidebarCarta'), 20000);
-    setInterval(plotarCepNoMapa, 20000);
+    setInterval(() => listTickets('sidebarCarta'), 5000);
+    setInterval(plotarCepNoMapa, 5000);
 
 
     window.onload = () => {

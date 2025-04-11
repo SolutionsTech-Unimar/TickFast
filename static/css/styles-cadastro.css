@@ -1,0 +1,141 @@
+body {
+    background: url('../images/fundoC.jpg') no-repeat center center/cover;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px 30px;
+    color: rgb(255, 255, 255);
+}
+
+header h1 {
+    font-size: 1.5em;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+.login-btn {
+    border: 1px solid rgb(255, 255, 255);
+    padding: 15px 22px;
+    background: transparent;
+    color: white;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background: rgb(255, 255, 255);
+    color: black;
+}
+
+/* FORM */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.form-box {
+    background: rgba(30, 30, 30, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    width: 320px;
+    color: white;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: white;
+    cursor: pointer;
+}
+
+.input-group {
+    margin: 10px 0;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9em;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid white;
+    background: transparent;
+    color: white;
+}
+
+/* HORÁRIO DE SERVIÇO */
+.time-box {
+    display: flex;
+    justify-content: space-between;
+}
+
+.time-box input {
+    width: 48%;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.register-btn {
+    width: 100%;
+    background: rgb(0, 0, 0);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.register-btn:hover {
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+.login-text {
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.login-text a {
+    color: white;
+    text-decoration: underline;
+}

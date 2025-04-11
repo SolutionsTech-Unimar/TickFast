@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-cadastro.css') }}">
+    <title>Registro</title>
+</head>
+<body>
+    <header>
+        <h1>TICKFAST</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+        </nav>
+        <button class="login-btn">Login</button>
+    </header>
+    
+    <div class="container">
+        <div class="form-box">
+            <div class="form-header">
+                <h2>Registration</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <form>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" placeholder="Username">
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Email">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Password">
+                </div>
+                <div class="input-group">
+                    <label>Horário de Serviço</label>
+                    <div class="time-box">
+                        <input type="time">
+                        <input type="time">
+                    </div>
+                </div>
+                <div>
+                    <button class="register-btn">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

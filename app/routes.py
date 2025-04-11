@@ -10,6 +10,10 @@ def home():
 def contato():
     return render_template("contato.html")
 
+@app.route('/cadastro')
+def cadastro():
+    return render_template("EmployReg.html")
+
 @app.route('/tick_fast')
 def ticketapp():
     return render_template("TickFast.html")
