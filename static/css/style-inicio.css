@@ -574,7 +574,7 @@ textarea {
 
 @media (max-width: 768px) {
   .container-fundo {
-    background-image: url('../fundo.jpeg');
+    background-image: url('../images/fundo.jpeg');
     background-size: cover; 
     background-position: center center; 
     background-repeat: no-repeat;

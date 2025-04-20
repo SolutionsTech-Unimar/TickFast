@@ -108,11 +108,12 @@ document.addEventListener("DOMContentLoaded", function () {
             marcadoresPorCep[cep] = marcador;
             console.log(`CEP: ${cep} -> Latitude: ${lat}, Longitude: ${lon}`);
             
-          } else {
+          } 
+          else {
             console.warn(`CEP: ${cep} não encontrou latitude e longitude.`);
           }
         }
-      }
+    }
 
 
 
@@ -124,6 +125,17 @@ document.addEventListener("DOMContentLoaded", function () {
         listTickets('sidebarCarta');
         plotarCepNoMapa();
         console.log("Página carregada e métodos executados!");
-      };
+    };
    
+    //---------------------------------------------------------------------
+
+    dayjs.locale('pt-br');
+    const spanDiaAtual = document.getElementById("dia-atual");
+    spanDiaAtual.textContent = dayjs().format('dddd D,').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
+        return separador + letra.toUpperCase();
+      })
+    const spanMesAtual = document.getElementById("mes-atual");
+    spanMesAtual.textContent = dayjs().format('MMMM YYYY').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
+        return separador + letra.toUpperCase();
+      })
 });
