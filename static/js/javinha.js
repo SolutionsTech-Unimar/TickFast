@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-     
-    let renderedTicketIds = new Set();
+    
     let ceps = [];
+    let dataSelecionada = new Date()
 
     async function listTickets(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
@@ -60,13 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const tickets = await res.json();
             ceps = tickets.map(ticket => ticket.cep);
 
+            sidebar.querySelectorAll('.ticket-box').forEach(el => el.remove());
 
             tickets.forEach(ticket => {
-                if (!renderedTicketIds.has(ticket.id)) {
-
-                    renderedTicketIds.add(ticket.id);
-
-
+                if (datasIguais(new Date(ticket.data), dataSelecionada)) {
                     const ticketDiv = document.createElement('div');
                     ticketDiv.className = 'ticket-box';
                     ticketDiv.innerHTML = `
@@ -129,15 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
    
     //---------------------------------------------------------------------
 
-    dayjs.locale('pt-br');
-    const spanDiaAtual = document.getElementById("dia-atual");
-    spanDiaAtual.textContent = dayjs().format('dddd D,').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
-        return separador + letra.toUpperCase();
-    })
-    const spanMesAtual = document.getElementById("mes-atual");
-    spanMesAtual.textContent = dayjs().format('MMMM YYYY').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
-        return separador + letra.toUpperCase();
-    })
+    updateDataMapa(dataSelecionada)
 
     //---------------------------------------------------------------------
       
@@ -153,7 +142,10 @@ document.addEventListener("DOMContentLoaded", function () {
             today: 'Hoje',
         },
         dateClick: function (info) {
-            console.log('Data clicada:', info.dateStr);   
+            dataSelecionada = info.date
+            listTickets('sidebarCarta')
+            updateDataMapa(dataSelecionada)
+            mapButton.click()
         },
         contentHeight: 670
     });
@@ -171,3 +163,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
+function updateDataMapa(data) {
+    dayjs.locale('pt-br');
+
+    const spanDiaAtual = document.getElementById("dia-atual");
+    spanDiaAtual.textContent = dayjs(data).format('dddd D,').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
+        return separador + letra.toUpperCase();
+    })
+
+    const spanMesAtual = document.getElementById("mes-atual");
+    spanMesAtual.textContent = dayjs(data).format('MMMM YYYY').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
+        return separador + letra.toUpperCase();
+    })
+}
+
+function datasIguais(d1, d2) {
+    return (
+      d1.getDate() === d2.getDate() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getFullYear() === d2.getFullYear()
+    );
+}
