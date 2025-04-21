@@ -231,6 +231,19 @@ nav {
   z-index: 0;
 }
 
+#calendar {
+  background-color: #e6e6e6;
+
+}
+
+.fc-toolbar-title {
+  text-transform: capitalize;
+}
+
+.fc-day-today {
+  background-color: #8fd1ce !important;
+}
+
 .leaflet-control-zoom {
   position: absolute;
   top: 7px;

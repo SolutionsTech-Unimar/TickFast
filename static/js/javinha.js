@@ -133,9 +133,41 @@ document.addEventListener("DOMContentLoaded", function () {
     const spanDiaAtual = document.getElementById("dia-atual");
     spanDiaAtual.textContent = dayjs().format('dddd D,').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
         return separador + letra.toUpperCase();
-      })
+    })
     const spanMesAtual = document.getElementById("mes-atual");
     spanMesAtual.textContent = dayjs().format('MMMM YYYY').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
         return separador + letra.toUpperCase();
-      })
+    })
+
+    //---------------------------------------------------------------------
+      
+    const calendarButton = document.querySelector('.header-button-calendario');
+    const mapButton = document.querySelector('.header-button-mapa');
+    const calendarDiv = document.getElementById('calendar');
+    const mapDiv = document.getElementById('map');
+
+    const calendar = new FullCalendar.Calendar(calendarDiv, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        buttonText: {
+            today: 'Hoje',
+        },
+        dateClick: function (info) {
+            console.log('Data clicada:', info.dateStr);   
+        },
+        contentHeight: 670
+    });
+    calendar.render();
+    calendarDiv.style.display = 'none';
+
+    calendarButton.addEventListener('click', () => {
+        calendarDiv.style.display = 'block';
+        mapDiv.style.display = 'none';
+    });
+
+    mapButton.addEventListener('click', () => {
+        calendarDiv.style.display = 'none';
+        mapDiv.style.display = 'block';
+    });
+
 });
