@@ -36,15 +36,15 @@ document.addEventListener("DOMContentLoaded", function () {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-     
-    let renderedTicketIds = new Set();
+    
     let ceps = [];
+    let dataSelecionada = new Date()
 
     async function listTickets(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
 
         try {
-
+            ceps = []
             const res = await fetch("http://localhost:5000/tickets", {
                 method: "GET",
                 headers: {
@@ -58,72 +58,165 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const tickets = await res.json();
-            ceps = tickets.map(ticket => ticket.cep);
+            const ticketsDoDia = tickets.filter(ticket => datasIguais(new Date(ticket.data), dataSelecionada))
+            ceps = ticketsDoDia.map(ticket => ticket.cep);
 
+            sidebar.querySelectorAll('.ticket-box').forEach(el => el.remove());
 
-            tickets.forEach(ticket => {
-                if (!renderedTicketIds.has(ticket.id)) {
-
-                    renderedTicketIds.add(ticket.id);
-
-
-                    const ticketDiv = document.createElement('div');
-                    ticketDiv.className = 'ticket-box';
-                    ticketDiv.innerHTML = `
-                    <h3>${ticket.produto}</h3>
-                    <p><strong>Nome:</strong> ${ticket.nome}</p>
-                    <p><strong>CEP:</strong> ${ticket.cep}</p>
-                    <p><strong>Status:</strong> ${ticket.status} </p>
-                `;
-                    sidebar.appendChild(ticketDiv);
-                }
+            ticketsDoDia.forEach(ticket => {
+                const ticketDiv = document.createElement('div');
+                ticketDiv.className = 'ticket-box';
+                ticketDiv.innerHTML = `
+                <h3>${ticket.produto}</h3>
+                <p><strong>Nome:</strong> ${ticket.nome}</p>
+                <p><strong>CEP:</strong> ${ticket.cep}</p>
+                <p><strong>Status:</strong> ${ticket.status} </p>
+            `;
+                sidebar.appendChild(ticketDiv);
             });
 
         } catch (error) {
             console.error("Erro ao carregar tickets:", error);
         }
+
+        for (const cep of ceps) {
+            await plotarCepNoMapa(cep)
+        }
     }
 
     let marcadoresPorCep = {};
 
-    async function plotarCepNoMapa() {
-        for (const cep of ceps) {
-          const viaCepResponse = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-          const viaCepData = await viaCepResponse.json();
-    
-          const endereco = `${viaCepData.logradouro}, ${viaCepData.localidade}, ${viaCepData.uf}`;
-    
-          // Nominatim para pegar latitude e longitude
-          const nominatimResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`);
-          const nominatimData = await nominatimResponse.json();
-    
-          if (marcadoresPorCep[cep]) return;
+    async function plotarCepNoMapa(cep) {
+        const viaCepResponse = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const viaCepData = await viaCepResponse.json();
 
-          if (nominatimData.length > 0) {
+        const endereco = `${viaCepData.logradouro}, ${viaCepData.localidade}, ${viaCepData.uf}`;
+
+        // Nominatim para pegar latitude e longitude
+        const nominatimResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`);
+        const nominatimData = await nominatimResponse.json();
+
+        if (marcadoresPorCep[cep] || !ceps.includes(cep)) return;
+
+        if (nominatimData.length > 0) {
             const { lat, lon } = nominatimData[0];
-    
             // Debug para ver as coordenadas no console
             
             const marcador = L.marker([lat, lon]).addTo(map);
             marcadoresPorCep[cep] = marcador;
             console.log(`CEP: ${cep} -> Latitude: ${lat}, Longitude: ${lon}`);
-            
-          } else {
+        
+        } 
+        else {
             console.warn(`CEP: ${cep} não encontrou latitude e longitude.`);
-          }
         }
-      }
+    }
 
-
-
-    setInterval(() => listTickets('sidebarCarta'), 5000);
-    setInterval(plotarCepNoMapa, 5000);
-
+    setInterval(() => listTickets('sidebarCarta'), 10000);
 
     window.onload = () => {
         listTickets('sidebarCarta');
-        plotarCepNoMapa();
         console.log("Página carregada e métodos executados!");
-      };
+    };
+   
+    //---------------------------------------------------------------------
+
+    updateDataMapa(dataSelecionada)
+
+    //---------------------------------------------------------------------
+      
+    const calendarButton = document.querySelector('.header-button-calendario');
+    const mapButton = document.querySelector('.header-button-mapa');
+    const calendarDiv = document.getElementById('calendar');
+    const mapDiv = document.getElementById('map');
+
+    const calendar = new FullCalendar.Calendar(calendarDiv, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        buttonText: {
+            today: 'Hoje',
+        },
+        dateClick: function (info) {
+            dataSelecionada = info.date
+            for (const cep in marcadoresPorCep) {
+                map.removeLayer(marcadoresPorCep[cep]);
+            }
+            marcadoresPorCep = {}
+            listTickets('sidebarCarta')
+            updateDataMapa(dataSelecionada)
+            mapButton.click()
+        },
+        contentHeight: 670,
+        eventsSet: function (events) {  
+            document.querySelectorAll('.event-pin').forEach(pin => pin.remove());
+
+            events.forEach(event => {
+                const dateStr = event.startStr.split('T')[0];
+                const cell = document.querySelector(`[data-date="${dateStr}"]`);
+
+                if (cell && !cell.querySelector('.event-pin')) {
+                    const pin = document.createElement('span');
+                    pin.className = 'event-pin';
+                    cell.querySelector('.fc-daygrid-day-top')?.appendChild(pin);
+                }
+            });
+        }
+    });
+    
+    calendarDiv.style.display = 'none';
+
+    calendarButton.addEventListener('click', () => {
+        calendarDiv.style.display = 'block';
+        mapDiv.style.display = 'none';
+        calendar.render();
+        carregarEventosNoCalendario(); 
+    });
+
+    mapButton.addEventListener('click', () => {
+        calendarDiv.style.display = 'none';
+        mapDiv.style.display = 'block';
+    });
+
+    async function carregarEventosNoCalendario() { 
+        try {
+            const response = await fetch("http://localhost:5000/tickets");
+            const tickets = await response.json();
+
+            const eventos = tickets.map(ticket => ({
+                title: ticket.produto,
+                start: ticket.data,
+                allDay: true
+            }));
+
+            calendar.removeAllEvents();    
+            calendar.addEventSource(eventos); 
+        } catch (error) {
+            console.error("Erro ao carregar tickets:", error);
+        }
+    }
+
+    carregarEventosNoCalendario(); 
    
 });
+
+function updateDataMapa(data) {
+    dayjs.locale('pt-br');
+
+    const spanDiaAtual = document.getElementById("dia-atual");
+    spanDiaAtual.textContent = dayjs(data).format('dddd D,').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
+        return separador + letra.toUpperCase();
+    })
+
+    const spanMesAtual = document.getElementById("mes-atual");
+    spanMesAtual.textContent = dayjs(data).format('MMMM YYYY').replace(/(^|\s|-)([a-zà-ú])/gi, (match, separador, letra) => {
+        return separador + letra.toUpperCase();
+    })
+}
+
+function datasIguais(d1, d2) {
+    return (
+      d1.getDate() === d2.getDate() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getFullYear() === d2.getFullYear()
+    );
+}

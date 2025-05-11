@@ -15,7 +15,7 @@
 
 .fade-in-inicial {
   opacity: 0; 
-  transform: translateX(-100%); 
+  transform: translateX(-200%); 
   transition: all 1s ease-out
 }
 
@@ -33,7 +33,7 @@
   display: flex;
   flex-direction: row;
   margin-top: 3%;
-  margin-right: 20%;
+  margin-right: 21%;
 }
 
 .freezer {
@@ -236,7 +236,7 @@
 
 @keyframes slideInFromTop {
   0% {
-      transform: translateY(-50px);
+      transform: translateY(-150px);
       opacity: 0;
   }
   100% {
@@ -574,7 +574,7 @@ textarea {
 
 @media (max-width: 768px) {
   .container-fundo {
-    background-image: url('../fundo.jpeg');
+    background-image: url('../images/fundo.jpeg');
     background-size: cover; 
     background-position: center center; 
     background-repeat: no-repeat;
@@ -664,4 +664,31 @@ textarea {
   .container-button2 {
     margin-top: 0;
   }
+}
+
+@media (min-width: 1800px) {
+  .container-freezer {
+    margin-right: 25%;
+  }
+  .fade-in-inicial {
+    margin-left: 65%;
+  }
+  #gato-avaliacoes {
+  width: 300px;
+  margin-left: 25px;
+}
+.container-caixa-avaliacao {
+  margin-bottom: 10vh;
+  margin-top: 10vh;
+}
+.caixa-avaliacao {
+  width: 70vh;
+  min-height: 650px;
+  padding-top: 90px;
+}
+.div-3 {
+  height: 100vh;
+  padding: 100px;
+}
+
 }
