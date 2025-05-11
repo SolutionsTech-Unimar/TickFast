@@ -58,7 +58,7 @@ def get_tickets():
             "cep": ticket.cep,
             "produto": ticket.produto,
             "status": ticket.status,
-            "data": ticket.data
+            "data": ticket.data.isoformat()
         }
         for ticket in tickets
     ]
