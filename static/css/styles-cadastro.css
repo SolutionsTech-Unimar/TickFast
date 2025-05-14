@@ -1,141 +1,190 @@
 body {
-    background: url('../images/fundoC.jpg') no-repeat center center/cover;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.background-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    145deg,
+    rgba(95, 15, 215, 1) 0%,
+    rgb(58, 58, 57) 30%,
+    rgba(0, 0, 0, 1) 80%
+  );
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  z-index: -2; /* envia para trás, abaixo de todo o conteúdo */
+}
+
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image: url("../images/cadastro.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: 0.03; /* controla a opacidade da imagem */
+  z-index: -1; /* envia para trás, abaixo de todo o conteúdo */
 }
 
 /* HEADER */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 15px 30px;
-    color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 15px 30px;
+  color: rgb(255, 255, 255);
+}
+
+.title {
+  font-size: 1.7em;
 }
 
 header h1 {
-    font-size: 1.5em;
+  font-size: 1.7em;
 }
 
 nav ul {
-    display: flex;
-    list-style: none;
-    padding: 0;
+  display: flex;
+  list-style: none;
+  padding: 0;
 }
 
 nav ul li {
-    margin: 0 15px;
+  margin: 0 15px;
 }
 
 nav ul li a {
-    color: rgb(255, 255, 255);
-    text-decoration: none;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
 }
 
 .login-btn {
-    border: 1px solid rgb(255, 255, 255);
-    padding: 15px 22px;
-    background: transparent;
-    color: white;
-    border-radius: 9px;
-    cursor: pointer;
+  border: 1px solid rgb(255, 255, 255);
+  padding: 15px 22px;
+  background: transparent;
+  color: white;
+  border-radius: 9px;
+  cursor: pointer;
 }
 
 .login-btn:hover {
-    background: rgb(255, 255, 255);
-    color: black;
+  background: rgb(255, 255, 255);
+  color: black;
 }
 
 /* FORM */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 }
 
 .form-box {
-    background: rgba(30, 30, 30, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    width: 320px;
-    color: white;
+  background: rgba(231, 228, 245, 0.575);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  width: 320px;
+  color: white;
 }
 
 .form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    color: white;
-    cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: white;
+  cursor: pointer;
 }
 
 .input-group {
-    margin: 10px 0;
+  margin: 10px 0;
 }
 
 .input-group label {
-    display: block;
-    font-size: 0.9em;
+  display: block;
+  font-size: 0.9em;
 }
 
 .input-group input {
-    width: 100%;
-    padding: 8px;
-    border: none;
-    border-bottom: 1px solid white;
-    background: transparent;
-    color: white;
+  width: 94%;
+  font-size: medium;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid rgb(15, 15, 15);
+  background: transparent;
+  color: rgb(0, 0, 0);
+}
+/* Caixa de selção de especialização */
+
+.focus {
+  margin-top: 10px;
+  height: 26px;
+  width: 230px;
+  font-size: 11pt;
 }
 
 /* HORÁRIO DE SERVIÇO */
 .time-box {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  font-size: medium;
 }
 
 .time-box input {
-    width: 48%;
+  width: 60%;
 }
 
 .checkbox-group {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
 }
 
 .register-btn {
-    width: 100%;
-    background: rgb(0, 0, 0);
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  width: 100%;
+  background: rgb(0, 0, 0);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .register-btn:hover {
-    background: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .login-text {
-    text-align: center;
-    font-size: 0.9em;
+  text-align: center;
+  font-size: 0.9em;
 }
 
 .login-text a {
-    color: white;
-    text-decoration: underline;
+  color: white;
+  text-decoration: underline;
 }

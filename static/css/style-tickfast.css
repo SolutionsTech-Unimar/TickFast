@@ -69,6 +69,11 @@ body {
 .tab-hover.header-button-calendario::before {
   transform-origin: right;  
   right: 0;
+  border-radius: 16px 1px 1px 16px;
+}
+
+.tab-hover.header-button-mapa::before{
+  border-radius: 1px 16px 16px 1px;
 }
 
 .tab-hover::before {
@@ -79,7 +84,7 @@ body {
   width: 100%;
   height: 100%;
   background: #A259FF;
-  border-radius: 16px;
+  
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s;
@@ -136,16 +141,6 @@ body {
   border-radius: 19px;
 }
 
-.help-icon {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  margin-top: auto;
-  margin-bottom: 10px;
-}
-
 .mini-bar {
   position: fixed;
   left: 0;
@@ -169,6 +164,16 @@ body {
   font-size: 24px;
   cursor: pointer;
   margin: 15px 0;
+}
+
+.help-icon {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: auto;
+  margin-bottom: 10px;
 }
 
 .sidebar {

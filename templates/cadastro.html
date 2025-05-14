@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-cadastro.css') }}">
+    <title>Registro</title>
+</head>
+<body>
+
+
+    <div class="background-gradient"></div>
+    <div class="background-image"></div>
+
+    <header>
+        <h1 class="title">Cadastrar Técnicos</h1>
+        <nav>
+            <ul>
+                <li><a class="header-link" href="{{ url_for('ticketapp') }}">Início</a></li>
+                <li><a href="#">Ajuda</a></li>
+            </ul>
+        </nav>
+       
+    </header>
+
+    
+    <div class="container">
+        <div class="form-box">
+            <div class="form-header">
+            </div>
+            <form id="form-cadastro">
+                <div class="input-group">
+                    <label>Nome</label>
+                    <input type="text" id="nome" placeholder="Nome" required>
+                    <div id="erro-nome" style="color: red; font-size: 0.9em;"></div>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="senha" placeholder="Senha" required>
+                </div>
+                <div class="input-group">
+                    <label>Especialidade</label>
+                    <select  id="especialidade" name="produto" class="focus" required>
+                        <option value="" selected disabled>Especialização</option>
+                        <option value="geral">Geral</option>
+                        <option value="freezer">Freezer</option>
+                        <option value="maquina de sorvete">Máquina de sorvete</option>
+                        <option value="geladeira">Geladeira</option>
+                        <option value="maquinademilkshake">Máquina de Milkshake</option>
+                        <option value="maquinadechantilly">Máquina de Chantilly</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Horário de Serviço</label>
+                    <div class="time-box">
+                        <input type="time" id="horaEntrada" required>
+                        <input type="time" id="horaSaida" required>
+                    </div>
+                </div>
+                <div>
+                    <div id="errorMessages" style="color: rgb(110, 2, 2); display: none; margin-bottom: 10px;"></div>
+                    <button class="register-btn" type="submit">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/cadastro.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

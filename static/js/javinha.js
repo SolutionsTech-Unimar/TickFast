@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ticketDiv.className = 'ticket-box';
                 ticketDiv.innerHTML = `
                 <h3>${ticket.produto}</h3>
+                <p><strong>ID: [${ticket.id}]</p>
                 <p><strong>Nome:</strong> ${ticket.nome}</p>
                 <p><strong>CEP:</strong> ${ticket.cep}</p>
                 <p><strong>Status:</strong> ${ticket.status} </p>

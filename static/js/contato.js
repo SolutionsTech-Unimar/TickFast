@@ -86,7 +86,7 @@ async function validarFormulario(event) {
                 background: "#fff url('../static/images/trees.png')",
                 backdrop: `
                   rgba(0,0,123,0.4)
-                  ("../static/images/nyan-cat.gif")
+                  url("../static/images/nyan-cat.gif")
                   left top
                   no-repeat
                 `
