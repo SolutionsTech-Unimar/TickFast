@@ -97,3 +97,31 @@ def get_tickets():
         for ticket in tickets
     ]
     return jsonify(tickets_list)
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    from app.models import Tecnico
+    data = request.json
+
+    identificador = data.get('email')  # pode ser email ou id (ambos vêm no mesmo campo no Flutter)
+    senha = data.get('senha')
+
+    if not identificador or not senha:
+        return jsonify({'error': 'Campos obrigatórios faltando'}), 400
+
+    # Tenta encontrar por email ou por ID numérico
+    tecnico = Tecnico.query.filter(
+        (Tecnico.email == identificador) | (Tecnico.id == identificador)
+    ).first()
+
+    if tecnico and tecnico.senha == senha:
+        return jsonify({
+            'status': 'sucesso',
+            'id': tecnico.id,
+            'nome': tecnico.nome,
+            'email': tecnico.email,
+            'token': '123456abc',
+        })
+    else:
+        return jsonify({'status': 'erro', 'mensagem': 'Credenciais inválidas'}), 401
