@@ -137,6 +137,8 @@ Future<void> fazerLogin(String login, String senha, BuildContext context) async 
       await prefs.setString('token', responseData['token']);
       await prefs.setString('nome', responseData['nome']);
       await prefs.setString('email', responseData['email']);
+      await prefs.setString('horaEntrada', responseData['horaEntrada']);
+      await prefs.setString('horaSaida', responseData['horaSaida']);
 
       // Redireciona para home
       Navigator.pushReplacementNamed(context, '/home');

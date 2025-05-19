@@ -1,6 +1,7 @@
 from flask import request, jsonify, render_template
 from random import randint
 from run import app, db
+import time
 
 # Página inicial
 @app.route('/')
@@ -66,6 +67,7 @@ def adicionar_tecnico():
             nome = data['nome'],
             email = data['email'],
             senha = data['senha'],
+            contrato = data['contrato'],
             especialidade = data['especialidade'],
             horaEntrada = data['horaEntrada'],
             horaSaida = data['horaSaida'],
@@ -121,7 +123,36 @@ def login():
             'id': tecnico.id,
             'nome': tecnico.nome,
             'email': tecnico.email,
+            'horaEntrada': tecnico.horaEntrada,
+            'horaSaida': tecnico.horaSaida,
             'token': '123456abc',
         })
     else:
         return jsonify({'status': 'erro', 'mensagem': 'Credenciais inválidas'}), 401
+    
+tecnicos_ativos = {}    
+
+@app.route('/api/ping', methods=['POST'])
+def ping():
+    data = request.json
+
+    id = data.get('id')  
+    lat = data.get('lat')
+    lng = data.get('lng')
+    
+
+    # Verificação mínima
+    if not id or lat is None or lng is None:
+        return jsonify({'status': 'erro', 'mensagem': 'Dados incompletos'}), 400
+
+    # Armazena ou atualiza dados no dicionário
+    tecnicos_ativos[id] = {
+        'lat': lat,
+        'lng': lng,
+        'timestamp': time.time()
+    }
+
+    # Debug print
+    print(f"Técnico {id} - Localização recebida: ({lat}, {lng})")
+
+    return jsonify({'status': 'sucesso', 'mensagem': 'Localização atualizada'}), 200

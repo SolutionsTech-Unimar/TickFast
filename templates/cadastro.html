@@ -43,6 +43,15 @@
                     <input type="password" id="senha" placeholder="Senha" required>
                 </div>
                 <div class="input-group">
+                    <label>Contrato</label>
+                    <select  id="contrato" name="tContra" class="tContra" required>
+                        <option value="" selected disabled>Tipo de contrato</option>
+                        <option value="clt">CLT</option>
+                        <option value="pj">PJ</option>
+                        <option value="mei">MEI</option>
+                    </select>
+                </div>
+                <div class="input-group">
                     <label>Especialidade</label>
                     <select  id="especialidade" name="produto" class="focus" required>
                         <option value="" selected disabled>Especialização</option>
@@ -57,12 +66,16 @@
                 <div class="input-group">
                     <label>Horário de Serviço</label>
                     <div class="time-box">
+                        <label class="hora">Entrada</label>
                         <input type="time" id="horaEntrada" required>
+                        <label class="hora">Saída</label>
                         <input type="time" id="horaSaida" required>
                     </div>
                 </div>
+                <div id="alertMessage" class="alertMessage" style="color: rgb(187, 0, 0); margin-bottom: 10px; margin-left: 23px;">
+                    <p id="msg" style="font-size: 11pt;"></p>
+                </div>
                 <div>
-                    <div id="errorMessages" style="color: rgb(110, 2, 2); display: none; margin-bottom: 10px;"></div>
                     <button class="register-btn" type="submit">Registrar</button>
                 </div>
             </form>

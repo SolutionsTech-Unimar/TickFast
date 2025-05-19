@@ -91,6 +91,8 @@ nav ul li a {
 /* FORM */
 .container {
   display: flex;
+  margin-bottom: 80px;
+  margin-top: 80px;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
@@ -138,6 +140,16 @@ nav ul li a {
   background: transparent;
   color: rgb(0, 0, 0);
 }
+
+/* Caixa de modelo trabalhista */
+
+.tContra{
+  margin-top: 10px;
+  height: 26px;
+  width: 130px;
+  font-size: 11pt;
+}
+
 /* Caixa de selção de especialização */
 
 .focus {
@@ -152,6 +164,7 @@ nav ul li a {
   display: flex;
   justify-content: space-between;
   font-size: medium;
+  margin-right: 10px;
 }
 
 .time-box input {
@@ -187,4 +200,15 @@ nav ul li a {
 .login-text a {
   color: white;
   text-decoration: underline;
+}
+
+.header-group{
+  margin-top: 10px;
+}
+
+.hora{
+  display: flex;
+  margin-top: 14px;
+  padding-right: 10px;
+  color: black;
 }

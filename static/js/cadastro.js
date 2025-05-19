@@ -1,3 +1,50 @@
+const contrato = document.getElementById("contrato");
+const entrada = document.getElementById("horaEntrada");
+const saida = document.getElementById("horaSaida");
+
+contrato.addEventListener("input", () => {
+    // Limpa o conteúdo anterior
+    const mensagem = document.getElementById("msg")
+    entrada.value = ""
+    saida.value = ""
+
+    if (contrato.value.toLowerCase() === "clt") {
+        // Cria a div de alerta
+        mensagem.innerText = "CLT dispõe de 8h na jornada de trabalho."
+    }
+    else{
+        mensagem.innerText = "";
+    }
+});
+
+// Sempre que a hora de entrada mudar, calcula a saída (+8h)
+entrada.addEventListener("input", () => {
+  if (!entrada.value) return;
+
+  if(contrato.value.toLowerCase() === "clt") {
+    const [horas, minutos] = entrada.value.split(":").map(Number);
+    const novaHora = new Date();
+    novaHora.setHours(horas + 8);
+    novaHora.setMinutes(minutos);
+
+    saida.value = novaHora.toTimeString().slice(0, 5); // Formata como HH:MM
+  }
+});
+
+// Sempre que a hora de saída mudar, calcula a entrada (-8h)
+saida.addEventListener("input", () => {
+  if (!saida.value) return;
+
+  if (contrato.value.toLowerCase() === "clt") {
+    const [horas, minutos] = saida.value.split(":").map(Number);
+    const novaHora = new Date();
+    novaHora.setHours(horas - 8);
+    novaHora.setMinutes(minutos);
+
+    entrada.value = novaHora.toTimeString().slice(0, 5);
+  }
+});
+
 document.getElementById('form-cadastro').addEventListener('submit', async function(event) {
     event.preventDefault(); // Evita o reload padrão do form
 
@@ -9,6 +56,7 @@ document.getElementById('form-cadastro').addEventListener('submit', async functi
     }
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
+    const contrato = document.getElementById('contrato').value;
     const especialidade = document.getElementById('especialidade').value;
     const horaEntrada = document.getElementById('horaEntrada').value;
     const horaSaida = document.getElementById('horaSaida').value;
@@ -18,6 +66,7 @@ document.getElementById('form-cadastro').addEventListener('submit', async functi
         nome: nome,
         email: email,
         senha: senha,
+        contrato: contrato,
         especialidade: especialidade,
         horaEntrada: horaEntrada,
         horaSaida: horaSaida
