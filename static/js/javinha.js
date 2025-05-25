@@ -24,6 +24,14 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleSidebar(sidebarCarta);
     });
 
+    btnHelp.addEventListener("click", function() {
+        Swal.fire({
+            title: "Suporte",
+            text: "Em caso de dúvidas, entre em contato com o nosso suporte: +55 14 99114-8278",
+            icon: "question",
+            backdrop: 'rgba(0, 0, 0, 0.84)'
+        }); 
+    });
 
     document.querySelectorAll(".close-btn").forEach(button => {
         button.addEventListener("click", function () {
@@ -54,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const tickets = await res.json();
             const ticketsDoDia = tickets.filter(ticket => {
                 if (!ticket.data) return false;
-                return datasIguais(new Date(ticket.data), dataSelecionada);
+                return datasIguais(new Date(ticket.data + "Z"), dataSelecionada);
             });
 
             ceps = ticketsDoDia.map(ticket => ticket.cep);
@@ -261,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const eventos = tickets.map(ticket => ({
                 title: ticket.produto,
-                start: ticket.data,
+                start: new Date(ticket.data + "Z"),
                 allDay: true
             }));
 
