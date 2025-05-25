@@ -1,6 +1,9 @@
-from flask import request, jsonify, render_template
+from flask import request,current_app,jsonify, render_template,url_for
 from random import randint
+from app.services import distribuir_ticket, extensao_permitida
+from werkzeug.utils import secure_filename
 from run import app, db
+import os
 import time
 
 # Página inicial
@@ -41,6 +44,8 @@ def adicionar_ticket():
         db.session.add(novo_ticket)
         db.session.commit()
 
+        distribuir_ticket(novo_ticket)
+
         return jsonify({"message": "Ticket adicionado com sucesso!"}), 200
 
     except Exception as e:
@@ -71,6 +76,7 @@ def adicionar_tecnico():
             especialidade = data['especialidade'],
             horaEntrada = data['horaEntrada'],
             horaSaida = data['horaSaida'],
+            status = 'inativo'
         )
 
         db.session.add(novo_tecnico)
@@ -86,19 +92,51 @@ def adicionar_tecnico():
 @app.route('/tickets', methods=['GET'])
 def get_tickets():
     from app.models import Ticket
+
     tickets = Ticket.query.all()
-    tickets_list = [
-        {
-            "id": ticket.id,
-            "nome": ticket.nome,
-            "cep": ticket.cep,
-            "produto": ticket.produto,
-            "status": ticket.status,
-            "data": ticket.data.isoformat()
-        }
-        for ticket in tickets
-    ]
-    return jsonify(tickets_list)
+    result = []
+    for t in tickets:
+        result.append({
+            "id": t.id,
+            "nome": t.nome,
+            "cep": t.cep,
+            "telefone": t.telefone,
+            "email": t.email,
+            "produto": t.produto,
+            "descricao": t.descricao,
+            "status": t.status,
+            "tecnico": t.tecnico.nome if t.tecnico else None,
+            "data": t.data.isoformat()
+        })
+    return jsonify(result)
+
+
+
+@app.route('/tecnicos', methods=['GET'])
+def get_tecnicos():
+    from app.models import Tecnico
+
+    tecnicos = Tecnico.query.all()
+    result = []
+    for t in tecnicos:
+        result.append({
+            "id": t.id,
+            "nome": t.nome,
+            "email": t.email,
+            "especialidade": t.especialidade,
+            "status": t.status,
+            "imagem": url_for('static', filename=f'images/{t.imagem}'),
+            "tickets": [  # tickets vinculados ao técnico
+                {
+                    "id": ticket.id,
+                    "produto": ticket.produto,
+                    "status": ticket.status,
+                }
+                for ticket in t.tickets
+            ],
+            "tickets_abertos": len([tk for tk in t.tickets if tk.status != "Encerrado"])
+        })
+    return jsonify(result)
 
 
 @app.route('/api/login', methods=['POST'])
@@ -119,40 +157,65 @@ def login():
 
     if tecnico and tecnico.senha == senha:
         return jsonify({
-            'status': 'sucesso',
+            'statusApi': 'sucesso',
             'id': tecnico.id,
             'nome': tecnico.nome,
             'email': tecnico.email,
             'horaEntrada': tecnico.horaEntrada,
             'horaSaida': tecnico.horaSaida,
-            'token': '123456abc',
+            'status': tecnico.status,
+            'token': tecnico.token,
         })
     else:
         return jsonify({'status': 'erro', 'mensagem': 'Credenciais inválidas'}), 401
     
-tecnicos_ativos = {}    
 
-@app.route('/api/ping', methods=['POST'])
-def ping():
-    data = request.json
+@app.route('/api/swap_status', methods=['POST'])
+def status():
+    from app.models import Tecnico  # db é necessário para commit
+    data = request.get_json()
 
-    id = data.get('id')  
-    lat = data.get('lat')
-    lng = data.get('lng')
-    
+    _id = int(data.get('id'))
+    novo_status = data.get('status')
 
-    # Verificação mínima
-    if not id or lat is None or lng is None:
-        return jsonify({'status': 'erro', 'mensagem': 'Dados incompletos'}), 400
+    if not _id or not novo_status:
+        return {'error': 'ID e status são obrigatórios.'}, 400
+        
 
-    # Armazena ou atualiza dados no dicionário
-    tecnicos_ativos[id] = {
-        'lat': lat,
-        'lng': lng,
-        'timestamp': time.time()
-    }
+    tecnico = Tecnico.query.filter_by(id=_id).first()
 
-    # Debug print
-    print(f"Técnico {id} - Localização recebida: ({lat}, {lng})")
+    if not tecnico:
+        return {'error': 'Técnico não encontrado.'}, 404
 
-    return jsonify({'status': 'sucesso', 'mensagem': 'Localização atualizada'}), 200
+    tecnico.status = novo_status
+    db.session.commit()
+
+    return {'message': 'Status atualizado com sucesso.'}, 200
+
+
+
+@app.route('/api/tecnico/upload_foto', methods=['POST'])
+def upload_foto():
+    from app.models import Tecnico
+
+    token = request.form.get('token')
+    imagem = request.files.get('imagem')
+
+    if not token or not imagem:
+        return jsonify({'erro': 'Token e imagem são obrigatórios'}), 400
+
+    if not extensao_permitida(imagem.filename):
+        return jsonify({'erro': 'Extensão não permitida'}), 400
+
+    tecnico = Tecnico.query.filter_by(token=token).first()
+    if not tecnico:
+        return jsonify({'erro': 'Técnico não encontrado'}), 404
+
+    nome_arquivo = secure_filename(f"{tecnico.id}_{imagem.filename}")
+    caminho = os.path.join(app.config['UPLOAD_FOLDER'], nome_arquivo)
+    imagem.save(caminho)
+
+    tecnico.imagem = nome_arquivo
+    db.session.commit()
+
+    return jsonify({'mensagem': 'Imagem atualizada com sucesso', 'imagem': nome_arquivo})

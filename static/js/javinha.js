@@ -1,21 +1,23 @@
+//----------------Eventos no DOM -----------//
+
 document.addEventListener("DOMContentLoaded", function () {
     const btnPessoa = document.getElementById("btnPessoa");
     const btnCarta = document.getElementById("btnCarta");
-    const sidebarPessoa = document.getElementById("sidebarPessoa");
+    const sidebarTecnico = document.getElementById("sidebarTecnico");
     const sidebarCarta = document.getElementById("sidebarCarta");
 
     function toggleSidebar(sidebar) {
         if (sidebar.classList.contains("active")) {
             sidebar.classList.remove("active");
         } else {
-            sidebarPessoa.classList.remove("active");
+            sidebarTecnico.classList.remove("active");
             sidebarCarta.classList.remove("active");
             sidebar.classList.add("active");
         }
     }
 
     btnPessoa.addEventListener("click", function () {
-        toggleSidebar(sidebarPessoa);
+        toggleSidebar(sidebarTecnico);
     });
 
     btnCarta.addEventListener("click", function () {
@@ -29,26 +31,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    //---------------------------------------------------------------------
-
-    var map = L.map('map').setView([-22.2369871525773, -49.96606033305354], 15); // Use um zoom menor (22 é exagerado)
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    
-    let ceps = [];
-    let dataSelecionada = new Date()
+    //--------------------Adiciona Tickets--------------------//
 
     async function listTickets(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
 
         try {
-            ceps = []
+            ceps = [];
+
             const res = await fetch("http://localhost:5000/tickets", {
                 method: "GET",
                 headers: {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json"
                 }
             });
 
@@ -58,7 +52,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const tickets = await res.json();
-            const ticketsDoDia = tickets.filter(ticket => datasIguais(new Date(ticket.data), dataSelecionada))
+            const ticketsDoDia = tickets.filter(ticket => {
+                if (!ticket.data) return false;
+                return datasIguais(new Date(ticket.data), dataSelecionada);
+            });
+
             ceps = ticketsDoDia.map(ticket => ticket.cep);
 
             sidebar.querySelectorAll('.ticket-box').forEach(el => el.remove());
@@ -68,10 +66,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 ticketDiv.className = 'ticket-box';
                 ticketDiv.innerHTML = `
                 <h3>${ticket.produto}</h3>
-                <p><strong>ID: [${ticket.id}]</p>
+                <p><strong>ID:</strong> [${ticket.id}]</p>
                 <p><strong>Nome:</strong> ${ticket.nome}</p>
                 <p><strong>CEP:</strong> ${ticket.cep}</p>
-                <p><strong>Status:</strong> ${ticket.status} </p>
+                <p><strong>Status:</strong> ${ticket.status}</p>
             `;
                 sidebar.appendChild(ticketDiv);
             });
@@ -81,9 +79,73 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         for (const cep of ceps) {
-            await plotarCepNoMapa(cep)
+            try {
+                await plotarCepNoMapa(cep);
+            } catch (e) {
+                console.error("Erro ao plotar CEP no mapa:", cep, e);
+            }
         }
     }
+    //--------------------------------Adiciona Tecnicos-------------------------------//
+
+    async function listTecnicosComTickets(sidebarId) {
+        const sidebar = document.getElementById(sidebarId);
+        try {
+            const res = await fetch("http://localhost:5000/tecnicos", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) {
+                console.error("Erro ao buscar técnicos:", res.status);
+                return;
+            }
+
+            const tecnicos = await res.json();
+            sidebar.querySelectorAll('.tecnico-box').forEach(el => el.remove());
+
+            tecnicos.forEach(tecnico => {
+                const tecnicoDiv = document.createElement('div');
+                tecnicoDiv.className = 'tecnico-box';
+                tecnicoDiv.innerHTML = `
+        <div class="tecnico-header">
+          <div class="foto-e-nome">
+            <div class="foto-perfil">
+                 <img src="${tecnico.imagem}" alt="Foto de ${tecnico.nome}" />
+            </div>
+            <div class="nome-status">
+              <div class="nome-tecnico">${tecnico.nome}</div>
+              <div class="texto-status">${tecnico.status}</div>
+            </div>
+          </div>
+          <div class="status-indicador status-${tecnico.status.toLowerCase()}"></div>
+        </div>
+        <div class="tecnico-footer">
+            <div class="especialidade">Especializado: ${tecnico.especialidade}</div>
+            <div class="ticketsT">Tickets: ${tecnico.tickets_abertos}</div>
+        </div>
+      `;
+                sidebar.appendChild(tecnicoDiv);
+            });
+        } catch (error) {
+            console.error("Erro ao carregar técnicos:", error);
+        }
+    }
+
+    //--------------------------------Plot no Mapa------------------------------------//
+
+    var map = L.map('map').setView([-22.2369871525773, -49.96606033305354], 15); // Use um zoom menor (22 é exagerado)
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    let ceps = [];
+    let dataSelecionada = new Date()
+
+
 
     let marcadoresPorCep = {};
 
@@ -102,12 +164,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (nominatimData.length > 0) {
             const { lat, lon } = nominatimData[0];
             // Debug para ver as coordenadas no console
-            
+
             const marcador = L.marker([lat, lon]).addTo(map);
             marcadoresPorCep[cep] = marcador;
             console.log(`CEP: ${cep} -> Latitude: ${lat}, Longitude: ${lon}`);
-        
-        } 
+
+        }
         else {
             console.warn(`CEP: ${cep} não encontrou latitude e longitude.`);
         }
@@ -116,16 +178,17 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(() => listTickets('sidebarCarta'), 10000);
 
     window.onload = () => {
+        listTecnicosComTickets('sidebarTecnico')
         listTickets('sidebarCarta');
         console.log("Página carregada e métodos executados!");
     };
-   
+
     //---------------------------------------------------------------------
 
     updateDataMapa(dataSelecionada)
 
     //---------------------------------------------------------------------
-      
+
     const calendarButton = document.querySelector('.header-button-calendario');
     const mapButton = document.querySelector('.header-button-mapa');
     const calendarDiv = document.getElementById('calendar');
@@ -148,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
             mapButton.click()
         },
         contentHeight: 670,
-        eventsSet: function (events) {  
+        eventsSet: function (events) {
             document.querySelectorAll('.event-pin').forEach(pin => pin.remove());
 
             events.forEach(event => {
@@ -163,14 +226,14 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
-    
+
     calendarDiv.style.display = 'none';
 
     calendarButton.addEventListener('click', () => {
         calendarDiv.style.display = 'block';
         mapDiv.style.display = 'none';
         calendar.render();
-        carregarEventosNoCalendario(); 
+        carregarEventosNoCalendario();
     });
 
     mapButton.addEventListener('click', () => {
@@ -178,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
         mapDiv.style.display = 'block';
     });
 
-    async function carregarEventosNoCalendario() { 
+    async function carregarEventosNoCalendario() {
         try {
             const response = await fetch("http://localhost:5000/tickets");
             const tickets = await response.json();
@@ -189,15 +252,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 allDay: true
             }));
 
-            calendar.removeAllEvents();    
-            calendar.addEventSource(eventos); 
+            calendar.removeAllEvents();
+            calendar.addEventSource(eventos);
         } catch (error) {
             console.error("Erro ao carregar tickets:", error);
         }
     }
 
-    carregarEventosNoCalendario(); 
-   
+    carregarEventosNoCalendario();
+
 });
 
 function updateDataMapa(data) {
@@ -216,8 +279,9 @@ function updateDataMapa(data) {
 
 function datasIguais(d1, d2) {
     return (
-      d1.getDate() === d2.getDate() &&
-      d1.getMonth() === d2.getMonth() &&
-      d1.getFullYear() === d2.getFullYear()
+        d1.getDate() === d2.getDate() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getFullYear() === d2.getFullYear()
     );
 }
+

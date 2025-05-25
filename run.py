@@ -10,6 +10,7 @@ CORS(app)
 
 from app.models import *
 from app.routes import *
+from app.services import *
 
 if __name__ == '__main__':
     with app.app_context():

@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
 
 // Função para autenticar na API Flask
 Future<void> fazerLogin(String login, String senha, BuildContext context) async {
-  final url = Uri.parse('http://10.0.2.2:5000/api/login'); // 10.0.2.2 = localhost do emulador Android
+  final url = Uri.parse('http://10.0.2.2:5000/api/login'); 
 
   try {
     final response = await http.post(
@@ -131,14 +131,16 @@ Future<void> fazerLogin(String login, String senha, BuildContext context) async 
 
     final responseData = jsonDecode(response.body);
 
-    if (response.statusCode == 200 && responseData['status'] == 'sucesso') {
+    if (response.statusCode == 200 && responseData['statusApi'] == 'sucesso') {
       // Salva dados do técnico localmente (SharedPreferences)
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', responseData['token']);
+      await prefs.setString('id', responseData['id'].toString());
       await prefs.setString('nome', responseData['nome']);
       await prefs.setString('email', responseData['email']);
       await prefs.setString('horaEntrada', responseData['horaEntrada']);
       await prefs.setString('horaSaida', responseData['horaSaida']);
+      await prefs.setString('status', responseData['status']);
 
       // Redireciona para home
       Navigator.pushReplacementNamed(context, '/home');

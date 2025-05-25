@@ -17,7 +17,7 @@ class LocationService {
     }
 
     // Inicia um timer que executa a cada 5 segundos
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 100), (timer) async {
       try {
         Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'pages/login_page.dart';
 import 'pages/home_page.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt_BR', null);
   runApp(const MyApp());
 }
 
