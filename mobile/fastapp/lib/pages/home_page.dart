@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
   String status = 'Inativo';
   Timer? _timer;
+  String? imagem = '';
   String horasRestantes = '00:00';
   DateTime dataRelevante = DateTime.now();
   bool atividadeEncerrada = false;
@@ -262,11 +263,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> carregarDados() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      String? imagem = prefs.getString('imagem');
       token = prefs.getString('token') ?? '';
       id = prefs.getString('id') ?? '';
       nome = prefs.getString('nome') ?? '';
       email = prefs.getString('email') ?? '';
+      imagem = prefs.getString('imagem') ?? '';
       horaEntrada = prefs.getString('horaEntrada') ?? '';
       horaSaida = prefs.getString('horaSaida') ?? '';
       status = prefs.getString('status') ?? 'inativo';
@@ -412,7 +413,7 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return buildPontoTab();
       case 2:
-         return ConfiguracoesWidget(nome: nome,email: email,id: id,token: token);
+         return ConfiguracoesWidget(nome: nome,email: email,id: id,token: token,onFotoAlterada: carregarDados,);
       default:
         return Container();
     }
@@ -454,11 +455,15 @@ class _HomePageState extends State<HomePage> {
                     alignment: Alignment.center,
                     clipBehavior: Clip.none,
                     children: [
-                      const CircleAvatar(
+                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: AssetImage(
-                          'assets/user_placeholder.png',
-                        ),
+                         backgroundImage:
+                          imagem != null && imagem!.isNotEmpty
+                              ? NetworkImage(
+                                'http://10.0.2.2:5000/static/fotos_perfil/$imagem',
+                              )
+                              : const AssetImage('assets/user_placeholder.png')
+                                  as ImageProvider,
                         backgroundColor: Colors.white,
                       ),
                       Positioned(

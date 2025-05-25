@@ -111,7 +111,6 @@ def get_tickets():
     return jsonify(result)
 
 
-
 @app.route('/tecnicos', methods=['GET'])
 def get_tecnicos():
     from app.models import Tecnico
@@ -125,7 +124,7 @@ def get_tecnicos():
             "email": t.email,
             "especialidade": t.especialidade,
             "status": t.status,
-            "imagem": url_for('static', filename=f'images/{t.imagem}'),
+            "imagem": url_for('static', filename=f'fotos_perfil/{t.imagem}'),
             "tickets": [  # tickets vinculados ao técnico
                 {
                     "id": ticket.id,
@@ -161,6 +160,7 @@ def login():
             'id': tecnico.id,
             'nome': tecnico.nome,
             'email': tecnico.email,
+            'imagem': tecnico.imagem,
             'horaEntrada': tecnico.horaEntrada,
             'horaSaida': tecnico.horaSaida,
             'status': tecnico.status,
@@ -198,16 +198,16 @@ def status():
 def upload_foto():
     from app.models import Tecnico
 
-    token = request.form.get('token')
+    id = request.form.get('id')
     imagem = request.files.get('imagem')
 
-    if not token or not imagem:
-        return jsonify({'erro': 'Token e imagem são obrigatórios'}), 400
+    if not id or not imagem:
+        return jsonify({'erro': 'Id e imagem são obrigatórios'}), 400
 
     if not extensao_permitida(imagem.filename):
         return jsonify({'erro': 'Extensão não permitida'}), 400
 
-    tecnico = Tecnico.query.filter_by(token=token).first()
+    tecnico = Tecnico.query.filter_by(id=id).first()
     if not tecnico:
         return jsonify({'erro': 'Técnico não encontrado'}), 404
 

@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:fastapp/pages/home_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +12,7 @@ class ConfiguracoesWidget extends StatefulWidget {
   final String email;
   final String id;
   final String token;
-  final String? imagemUrl; // <- novo parâmetro
+  final VoidCallback? onFotoAlterada;
 
   const ConfiguracoesWidget({
     super.key,
@@ -18,7 +20,7 @@ class ConfiguracoesWidget extends StatefulWidget {
     required this.email,
     required this.id,
     required this.token,
-    this.imagemUrl, // <- incluir aqui
+    this.onFotoAlterada,
   });
 
   @override
@@ -28,8 +30,22 @@ class ConfiguracoesWidget extends StatefulWidget {
 class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
   bool tokenVisivel = false;
   File? fotoUsuario;
+  String? imagemUrl;
 
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarImagem();
+  }
+
+  Future<void> _carregarImagem() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      imagemUrl = prefs.getString('imagem') ?? '';
+    });
+  }
 
   Future<void> _trocarFoto() async {
     try {
@@ -43,33 +59,47 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
       if (imagemSelecionada != null) {
         final imagem = File(imagemSelecionada.path);
 
-        setState(() {
-          fotoUsuario = imagem;
-        });
+        // Envia a imagem e espera a resposta do servidor
+        final imagemSalva = await _enviarImagemParaServidor(
+          imagem,
+          prefs.getString('id') ?? '',
+        );
 
-        await _enviarImagemParaServidor(imagem, prefs.getString('token') ?? '');
+        if (imagemSalva != null) {
+          // Salva o nome da imagem no SharedPreferences
+          await prefs.setString('imagem', imagemSalva);
+
+          setState(() {
+            fotoUsuario = imagem;
+            imagemUrl = imagemSalva; // Agora é a resposta atualizada
+          });
+
+           widget.onFotoAlterada?.call(); // <-- dispara o callback!
+        }
       }
     } catch (e) {
       debugPrint('Erro ao escolher imagem: $e');
     }
   }
+  
 
-  Future<void> _enviarImagemParaServidor(File imagem, String token) async {
-
+  Future<String?> _enviarImagemParaServidor(File imagem, String id) async {
     final uri = Uri.parse('http://10.0.2.2:5000/api/tecnico/upload_foto');
 
     final request =
         http.MultipartRequest('POST', uri)
-          ..fields['token'] = token
+          ..fields['id'] = id
           ..files.add(await http.MultipartFile.fromPath('imagem', imagem.path));
 
     final response = await request.send();
 
     if (response.statusCode == 200) {
-      debugPrint('Imagem enviada com sucesso!');
-      // Aqui você pode atualizar o estado ou recarregar a imagem
+      final respostaJson = await http.Response.fromStream(response);
+      final dados = json.decode(respostaJson.body);
+      return dados['imagem']; // nome do arquivo salvo no servidor
     } else {
-      debugPrint('Erro ao enviar imagem. Código: ${response.statusCode}');
+      debugPrint('Falha ao enviar imagem: ${response.statusCode}');
+      return null;
     }
   }
 
@@ -93,10 +123,9 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
                     CircleAvatar(
                       radius: 48,
                       backgroundImage:
-                          widget.imagemUrl != null &&
-                                  widget.imagemUrl!.isNotEmpty
+                          imagemUrl != null && imagemUrl!.isNotEmpty
                               ? NetworkImage(
-                                'http://10.0.2.2:5000/static/${widget.imagemUrl}',
+                                'http://10.0.2.2:5000/static/fotos_perfil/$imagemUrl',
                               )
                               : const AssetImage('assets/user_placeholder.png')
                                   as ImageProvider,

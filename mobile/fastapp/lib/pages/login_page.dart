@@ -135,6 +135,7 @@ Future<void> fazerLogin(String login, String senha, BuildContext context) async 
       // Salva dados do técnico localmente (SharedPreferences)
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', responseData['token']);
+      await prefs.setString('imagem', responseData['imagem']);
       await prefs.setString('id', responseData['id'].toString());
       await prefs.setString('nome', responseData['nome']);
       await prefs.setString('email', responseData['email']);

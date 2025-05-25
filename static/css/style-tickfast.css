@@ -182,8 +182,14 @@ body {
   width: 300px;
   min-height: 730px;
   max-height: 730px;
-  background-color: rgb(117, 116, 116);
+   background: linear-gradient(
+    145deg,
+    rgb(112, 172, 167) 0%,
+    rgb(157, 173, 197) 30%,
+    rgb(171, 123, 202) 100%
+  );
   border-radius: 0px 0px 0px 19px;
+  opacity: 0.95;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   padding: 20px;
   display: none;

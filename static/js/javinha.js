@@ -88,6 +88,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     //--------------------------------Adiciona Tecnicos-------------------------------//
 
+    const capitalizarPrimeiraLetra = (texto) => {
+        if (!texto) return "";
+        return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+    };
+
     async function listTecnicosComTickets(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
         try {
@@ -106,29 +111,37 @@ document.addEventListener("DOMContentLoaded", function () {
             const tecnicos = await res.json();
             sidebar.querySelectorAll('.tecnico-box').forEach(el => el.remove());
 
-            tecnicos.forEach(tecnico => {
+            // Separar técnicos ativos e inativos
+            const ativos = tecnicos.filter(t => t.status.toLowerCase() === 'ativo');
+            const outros = tecnicos.filter(t => t.status.toLowerCase() !== 'ativo');
+
+            // Juntar com ativos primeiro
+            const ordenados = [...ativos, ...outros];
+
+            ordenados.forEach(tecnico => {
                 const tecnicoDiv = document.createElement('div');
                 tecnicoDiv.className = 'tecnico-box';
                 tecnicoDiv.innerHTML = `
-        <div class="tecnico-header">
-          <div class="foto-e-nome">
-            <div class="foto-perfil">
-                 <img src="${tecnico.imagem}" alt="Foto de ${tecnico.nome}" />
-            </div>
-            <div class="nome-status">
-              <div class="nome-tecnico">${tecnico.nome}</div>
-              <div class="texto-status">${tecnico.status}</div>
-            </div>
-          </div>
-          <div class="status-indicador status-${tecnico.status.toLowerCase()}"></div>
-        </div>
-        <div class="tecnico-footer">
-            <div class="especialidade">Especializado: ${tecnico.especialidade}</div>
-            <div class="ticketsT">Tickets: ${tecnico.tickets_abertos}</div>
-        </div>
-      `;
+                <div class="tecnico-header">
+                  <div class="foto-e-nome">
+                    <div class="foto-perfil">
+                         <img src="${tecnico.imagem}" alt="Foto de ${tecnico.nome}"/>
+                    </div>
+                    <div class="nome-status">
+                      <div class="nome-tecnico">${tecnico.nome} #${tecnico.id}</div>
+                      <div class="texto-status">${tecnico.status.toUpperCase()}</div>
+                    </div>
+                  </div>
+                  <div class="status-indicador status-${tecnico.status.toLowerCase()}"></div>
+                </div>
+                <div class="tecnico-footer">
+                    <div class="especialidade">Esp.: ${capitalizarPrimeiraLetra(tecnico.especialidade)}</div>
+                    <div class="ticketsT">Tickets: ${tecnico.tickets_abertos}</div>
+                </div>
+            `;
                 sidebar.appendChild(tecnicoDiv);
             });
+
         } catch (error) {
             console.error("Erro ao carregar técnicos:", error);
         }
