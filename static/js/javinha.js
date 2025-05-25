@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const tickets = await res.json();
-            const ticketsDoDia = tickets.filter(ticket => datasIguais(new Date(ticket.data), dataSelecionada))
+            const ticketsDoDia = tickets.filter(ticket => datasIguais(new Date(ticket.data + "Z"), dataSelecionada))
             ceps = ticketsDoDia.map(ticket => ticket.cep);
 
             sidebar.querySelectorAll('.ticket-box').forEach(el => el.remove());
@@ -181,10 +181,9 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("http://localhost:5000/tickets");
             const tickets = await response.json();
-
             const eventos = tickets.map(ticket => ({
                 title: ticket.produto,
-                start: ticket.data,
+                start: new Date(ticket.data + "Z"),
                 allDay: true
             }));
 

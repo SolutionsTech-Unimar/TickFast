@@ -77,7 +77,7 @@ async function validarFormulario(event) {
             })
         })
 
-        if (res.status == 200) {
+        if (res.status == 201) {
             Swal.fire({
                 title: "Enviado com sucesso! Você receberá atualizações pelo email",
                 width: 600,
@@ -92,6 +92,18 @@ async function validarFormulario(event) {
                 `
             }).then(() => {
                 window.location.href = "/";  // Redireciona para a rota principal
+            });
+        }
+        else if (res.status == 200) {
+            Swal.fire({
+                icon: "success",
+                title: "Ticket removido!",
+            });
+        }
+        else if (res.status == 404) {
+            Swal.fire({
+                icon: "error",
+                title: "Ticket não encontrado!",
             });
         }
         else {

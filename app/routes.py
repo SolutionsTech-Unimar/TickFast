@@ -24,8 +24,16 @@ def adicionar_ticket():
         from app.models import Ticket
         
         data = request.get_json()
-
        
+        if data['produto'] == "cancelamento":
+            ticketToDelete = Ticket.query.filter_by(nome=data['nome'], cep=data['cep']).first()
+            if ticketToDelete:
+                db.session.delete(ticketToDelete)
+                db.session.commit()
+                return jsonify({"message": "Ticket removido com sucesso!"}), 200
+            else:
+                return jsonify({"message": "Erro: Ticket não encontrado!"}), 404
+
         novo_ticket = Ticket(
             nome=data['nome'],
             cep=data['cep'],
@@ -35,13 +43,12 @@ def adicionar_ticket():
             descricao=data['descricao'],
             status='aberto'
         )
-
         
         db.session.add(novo_ticket)
         db.session.commit()
 
         
-        return jsonify({"message": "Ticket adicionado com sucesso!"}), 200
+        return jsonify({"message": "Ticket adicionado com sucesso!"}), 201
 
     except Exception as e:
         print("Erro ao adicionar ticket:", e)

@@ -1,7 +1,7 @@
 .container-fundo {
   height: 100vh;
   position: relative;
-  background-image: url('../images/WhatsApp\ Image\ 2025-04-10\ at\ 13.22.31.jpeg'); 
+  background-image: url('../images/Fundo.png'); 
   background-size: cover; 
   background-position: center center; 
   background-repeat: no-repeat;
@@ -135,7 +135,6 @@
   flex-direction: column;
   justify-content: flex-end;
   padding-top: 50px;
-  font-family: Copperplate, "Copperplate Gothic Light", fantasy;
   color: rgb(83, 46, 0);
   margin-left: 30%;
 }
