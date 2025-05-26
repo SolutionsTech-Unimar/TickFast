@@ -1,5 +1,6 @@
 from flask import request,current_app,jsonify, render_template,url_for
 from random import randint
+from datetime import datetime, timedelta
 from app.services import distribuir_ticket, extensao_permitida
 from werkzeug.utils import secure_filename
 from run import app, db
@@ -228,3 +229,51 @@ def upload_foto():
     db.session.commit()
 
     return jsonify({'mensagem': 'Imagem atualizada com sucesso', 'imagem': nome_arquivo})
+
+tecnicos_localizacao = {}
+
+@app.route("/api/ping", methods=["POST"])
+def receber_localizacao():
+
+    data = request.get_json()
+    id_tecnico = data.get("id")
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+
+    if not id_tecnico or latitude is None or longitude is None:
+        return jsonify({"erro": "Dados incompletos"}), 400
+
+    tecnicos_localizacao[id_tecnico] = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "timestamp": datetime.utcnow()
+    }
+
+    return jsonify({"mensagem": "Localização atualizada com sucesso"}), 200
+
+
+@app.route("/api/tecnicos/ativos", methods=["GET"])
+def tecnicos_ativos():
+    from app.models import Tecnico
+    agora = datetime.utcnow()
+    tecnicos_visiveis = []
+
+    for id_tecnico, dados in tecnicos_localizacao.items():
+
+        tecnico = Tecnico.query.filter_by(id=id_tecnico).first()
+        
+        imagem = None
+        if tecnico and tecnico.imagem:
+            imagem = url_for('static', filename=f"fotos_perfil/{tecnico.imagem}", _external=True)
+
+        ativo = (agora - dados["timestamp"]) <= timedelta(seconds=10)
+
+        tecnicos_visiveis.append({
+            "id": id_tecnico,
+            "latitude": dados["latitude"],
+            "longitude": dados["longitude"],
+            "imagem": imagem,
+            "ativo": ativo
+        })
+
+    return jsonify(tecnicos_visiveis), 200

@@ -24,13 +24,13 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleSidebar(sidebarCarta);
     });
 
-    btnHelp.addEventListener("click", function() {
+    btnHelp.addEventListener("click", function () {
         Swal.fire({
             title: "Suporte",
             text: "Em caso de dúvidas, entre em contato com o nosso suporte: +55 14 99114-8278",
             icon: "question",
             backdrop: 'rgba(0, 0, 0, 0.84)'
-        }); 
+        });
     });
 
     document.querySelectorAll(".close-btn").forEach(button => {
@@ -40,6 +40,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     //--------------------Adiciona Tickets--------------------//
+
+
+     //-------DesignPingTick|
+
+        var tickIcon = L.icon({
+            iconUrl: '/static/images/Ticket.png',
+            iconAnchor: [60, 70],
+            iconSize: [30,30],
+            className: 'ticket-icone'
+        });
+    //----------------------|
 
     async function listTickets(sidebarId) {
         const sidebar = document.getElementById(sidebarId);
@@ -155,19 +166,67 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    //--------------------------------Plot no Mapa------------------------------------//
-
+    //-------------------------------------------Leaflet-----------------------------------------//
     var map = L.map('map').setView([-22.2369871525773, -49.96606033305354], 15); // Use um zoom menor (22 é exagerado)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    //--------------------------------Pingar tecnicos no mapa ------------------------------------//
+
+
+
+
+    //-------DesignPing|
+    const tecIconSize = [40, 40]; // Tamanho desejado
+
+    const pingIcon = (urlImg) => L.icon({
+        iconUrl: urlImg,
+        iconSize: tecIconSize,
+        iconAnchor: [25, 25], // centraliza
+        className: 'foto-icone' // adiciona uma classe CSS para arredondar
+    });
+    //-----------------|
+
+    const marcadores = {}; // Guarda marcadores no mapa por ID
+
+    async function pingarTecnicos() {
+        try {
+            const res = await fetch("http://localhost:5000/api/tecnicos/ativos");
+            const tecnicos = await res.json();
+
+            tecnicos.forEach(t => {
+                if (t.ativo) {
+                    // Criar novo marcador ou atualizar posição
+                    if (marcadores[t.id]) {
+                        marcadores[t.id].setLatLng([t.latitude, t.longitude]);
+                    } else {
+                        const marker = L.marker([t.latitude, t.longitude], {
+                            icon: pingIcon(t.imagem)  // <-- foto como ícone
+                        })
+                            .addTo(map)
+                            .bindPopup(`Técnico ID: ${t.id}`);
+                        marcadores[t.id] = marker;
+                    }
+                } else {
+                    // Remover marcador se técnico ficou inativo
+                    if (marcadores[t.id]) {
+                        map.removeLayer(marcadores[t.id]);
+                        delete marcadores[t.id];
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.error("Erro ao buscar técnicos ativos:", error);
+        }
+    }
+
+
+    //--------------------------------Pingar tickets no mapa ------------------------------------//
     let ceps = [];
     let dataSelecionada = new Date()
-
-
-
     let marcadoresPorCep = {};
 
     async function plotarCepNoMapa(cep) {
@@ -186,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const { lat, lon } = nominatimData[0];
             // Debug para ver as coordenadas no console
 
-            const marcador = L.marker([lat, lon]).addTo(map);
+            const marcador = L.marker([lat, lon], {icon: tickIcon}).addTo(map);
             marcadoresPorCep[cep] = marcador;
             console.log(`CEP: ${cep} -> Latitude: ${lat}, Longitude: ${lon}`);
 
@@ -196,11 +255,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    setInterval(() => listTickets('sidebarCarta'), 10000);
+    setInterval(() => {
+        listTickets('sidebarCarta');
+        listTecnicosComTickets('sidebarTecnico');
+        pingarTecnicos();
+    }, 10000);
+
 
     window.onload = () => {
         listTecnicosComTickets('sidebarTecnico')
         listTickets('sidebarCarta');
+        pingarTecnicos()
         console.log("Página carregada e métodos executados!");
     };
 

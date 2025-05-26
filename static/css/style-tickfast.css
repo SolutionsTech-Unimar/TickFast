@@ -381,7 +381,8 @@ p img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ccc;    /* opcional: para fundo neutro */
+  background-color: #ccc;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.788);    /* opcional: para fundo neutro */
 }
 
 .foto-perfil img {
@@ -430,3 +431,22 @@ p img {
   font-weight: bold;
 }
 
+.foto-icone {
+  border-radius: 50% !important;
+  overflow: hidden;
+  width: 50px !important;
+  height: 50px !important;
+  object-fit: cover;
+
+  /* Borda branca ao redor da imagem */
+  border: 3px solid #01f83f;
+
+  /* Shadow mais forte */
+  box-shadow: 3px 6px 2px rgba(10, 10, 10, 0.486);
+}
+
+.ticket-icone{
+  width: 80px !important;
+  height: 70px !important;
+  
+}

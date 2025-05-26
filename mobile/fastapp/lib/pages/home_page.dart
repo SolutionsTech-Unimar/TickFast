@@ -83,6 +83,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.pop(context);
                   setState(() {
+                    LocationService.stopSendingLocation();
                     atualizarStatus('inativo');
                     AtividadeNoServidor();
                     minutosExtras == 0;
@@ -276,6 +277,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
+    LocationService.stopSendingLocation();
     await prefs.clear();
     Navigator.pushReplacementNamed(context, '/login');
   }
