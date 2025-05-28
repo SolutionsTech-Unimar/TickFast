@@ -42,14 +42,14 @@ document.addEventListener("DOMContentLoaded", function () {
     //--------------------Adiciona Tickets--------------------//
 
 
-     //-------DesignPingTick|
+    //-------DesignPingTick|
 
-        var tickIcon = L.icon({
-            iconUrl: '/static/images/Ticket.png',
-            iconAnchor: [60, 70],
-            iconSize: [30,30],
-            className: 'ticket-icone'
-        });
+    var tickIcon = L.icon({
+        iconUrl: '/static/images/Ticket.png',
+        iconAnchor: [60, 70],
+        iconSize: [34, 34],
+        className: 'ticket-icone'
+    });
     //----------------------|
 
     async function listTickets(sidebarId) {
@@ -73,7 +73,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const tickets = await res.json();
             const ticketsDoDia = tickets.filter(ticket => {
                 if (!ticket.data) return false;
+                if (ticket.status === "fechado") return false;
                 return datasIguais(new Date(ticket.data + "Z"), dataSelecionada);
+
             });
 
             ceps = ticketsDoDia.map(ticket => ticket.cep);
@@ -99,7 +101,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         for (const cep of ceps) {
             try {
+
                 await plotarCepNoMapa(cep);
+
+
             } catch (e) {
                 console.error("Erro ao plotar CEP no mapa:", cep, e);
             }
@@ -245,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const { lat, lon } = nominatimData[0];
             // Debug para ver as coordenadas no console
 
-            const marcador = L.marker([lat, lon], {icon: tickIcon}).addTo(map);
+            const marcador = L.marker([lat, lon], { icon: tickIcon }).addTo(map);
             marcadoresPorCep[cep] = marcador;
             console.log(`CEP: ${cep} -> Latitude: ${lat}, Longitude: ${lon}`);
 

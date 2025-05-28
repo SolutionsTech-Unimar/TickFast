@@ -143,7 +143,7 @@ def get_tecnicos():
                 }
                 for ticket in t.tickets
             ],
-            "tickets_abertos": len([tk for tk in t.tickets if tk.status != "Encerrado"])
+            "tickets_abertos": len([tk for tk in t.tickets if tk.status != "fechado"])
         })
     return jsonify(result)
 
@@ -178,6 +178,36 @@ def login():
         })
     else:
         return jsonify({'status': 'erro', 'mensagem': 'Credenciais inválidas'}), 401
+    
+
+@app.route('/api/tecnico/<int:id>', methods=['GET'])
+def get_tickets_tecnico(id):
+    from app.models import Tecnico
+    tecnico = Tecnico.query.get(id)
+    if not tecnico:
+        return jsonify({'error': 'Técnico não encontrado'}), 404
+
+    return jsonify({
+        'tickets': [
+            {
+                'id': t.id,
+                'descricao': t.descricao,
+                'status': t.status
+            } for t in tecnico.tickets if t.status != 'fechado'
+        ]
+    })
+
+@app.route('/api/ticket/<int:id>/fechar', methods=['POST'])
+def fechar_ticket(id):
+    from app.models import Ticket
+    ticket = Ticket.query.get(id)
+    if not ticket:
+        return jsonify({'error': 'Ticket não encontrado'}), 404
+
+    ticket.status = 'fechado'
+    db.session.commit()
+    return jsonify({'message': 'Ticket fechado com sucesso'})
+
     
 
 @app.route('/api/swap_status', methods=['POST'])

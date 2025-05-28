@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fastapp/services/location_service.dart';
 import 'package:fastapp/services/status_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fastapp/pages/subPages/tickets_page.dart';
 import 'package:fastapp/pages/subPages/config_page.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
@@ -411,7 +412,7 @@ class _HomePageState extends State<HomePage> {
   Widget buildContent() {
     switch (selectedIndex) {
       case 0:
-        return const Center(child: Text('Nenhum ticket disponível'));
+        return TicketsWidget(tecnicoId:  int.tryParse(id) ?? 0, token: token);
       case 1:
         return buildPontoTab();
       case 2:
