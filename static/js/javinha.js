@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
                          <img src="${tecnico.imagem}" alt="Foto de ${tecnico.nome}"/>
                     </div>
                     <div class="nome-status">
-                      <div class="nome-tecnico">${tecnico.nome} #${tecnico.id}</div>
+                      <div class="nome-tecnico">Técn. ${tecnico.nome} #${tecnico.id}</div>
                       <div class="texto-status">${tecnico.status.toUpperCase()}</div>
                     </div>
                   </div>
@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const { lat, lon } = nominatimData[0];
             // Debug para ver as coordenadas no console
 
-            const marcador = L.marker([lat, lon], { icon: tickIcon }).addTo(map);
+            const marcador = L.marker([lat, lon], { icon: tickIcon }).addTo(map).bindPopup(`Ticket em: ${endereco}`);
             marcadoresPorCep[cep] = marcador;
             console.log(`CEP: ${cep} -> Latitude: ${lat}, Longitude: ${lon}`);
 
